@@ -8,7 +8,37 @@ SOURCES += \
         main.cpp
 
 
+HEADERS += \
+    internal/ipc_trans.h \
+    internal/stop_request.h
+
+DISTFILES += \
+    conanfile.py \
+    version.txt
+
+
 message("==============================Project example [$$TARGET]============================")
+DEFINES += "ROBSYS_LOG_TAG=App"
+!equals(USE_CONAN, 1)  {
+    BUILD_GCC_VER=8
+    TARGET_ARCH=x86_64
+}
+include($$PWD/werror.pri)
+
+equals(USE_CONAN, 1) {
+
+    CONFIG += conan_basic_setup
+    QMAKE_RPATHDIR += ./
+    QMAKE_RPATHDIR += ../lib
+    QMAKE_RPATHDIR += ../libs
+    message("use conan dependency")
+    include($${OUT_PWD}/conanbuildinfo.pri)
+    DEFINES+=BUILD_BY_CONAN
+
+    LIBS += -lpthread -ldl -lrt
+
+}
+else {
 
 include(../../robsys_build_config/qt_env.pri)
 include($${RSWS_BUIILD_ENV}/qmake/robsys_platform.pri)
@@ -49,6 +79,4 @@ LIBS += -lpthread -ldl -lrt
 target.path = $${BIN_INSTALL_PATH}
 !isEmpty(target.path): INSTALLS += target
 
-HEADERS += \
-    internal/ipc_trans.h \
-    internal/stop_request.h
+}
