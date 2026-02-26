@@ -1,5 +1,14 @@
 Library_path:  "../lib/"
 
+Modules: [
+
+    [ module_lib: "librs_module_chassis_kago5.so" ,
+      module_cfg: "../config/rs_module_chassis_kago5/module_vehicle_kago5.yaml" ],
+    [ module_lib: "librs_module_metal_mapping.so" ,
+      module_cfg: "../config/rs_module_metal_mapping/metal_mapping.yaml" ],
+    [ module_lib: "librs_module_metal_grpc_slam.so" ,
+      module_cfg: "../config/rs_module_metal_grpc_slam/grpc_slam.yaml" ],
+]
 
 TF_srv_name: "metal-tf-srv"
 TF_srv_cfg:  "../config/transform_server/transform_metal.yaml"
