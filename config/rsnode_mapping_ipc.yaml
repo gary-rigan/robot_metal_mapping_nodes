@@ -1,0 +1,8 @@
+config_name: "rsnode_slam"
+
+Topics:
+    topic_laser: "Laserscan2d"
+    livox_pts:   "Sensor-pts3d"
+    livox_imu:   "Sensor-imu3d"
+    rgbd_front:  "rgbd-front"
+    rgbd_rear:  "rgbd-front"

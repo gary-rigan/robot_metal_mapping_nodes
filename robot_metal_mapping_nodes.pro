@@ -4,16 +4,25 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        internal/ipc_trans.cpp \
+        internal/ipc_trans_option.cpp \
+        internal/module_list.cpp \
+        internal/robot_modules.cpp \
         internal/stop_request.cpp \
         main.cpp
 
 
 HEADERS += \
     internal/ipc_trans.h \
+    internal/module_list.h \
+    internal/robot_modules.h \
+    internal/rsnode_mapping_config.h \
     internal/stop_request.h
 
 DISTFILES += \
     conanfile.py \
+    config/rsnode_mapping_ipc.yaml \
+    config/rsnode_mapping_modules.yaml \
     version.txt
 
 
@@ -66,6 +75,9 @@ message("Thr party  lib path: " $${LIB_THR_PARTY_PATH})
 message("Robsys     lib path: " $${LIB_ROBSYS_PATH})
 message("Target install path: " $${BIN_INSTALL_PATH})
 
+
+
+LIBS += -L$${LIB_ROBSYS_PATH}/ -lrobot_metal_ipc_msg -lrobot_metal_ipc_msg_bridge -ldevice_laserscan_livox_message
 LIBS += -L$${LIB_ROBSYS_PATH}/ -lrobsys_system -ltransform_server
 LIBS += -L$${LIB_ROBSYS_PATH}/ -lutils -lrobsys_message -lparsers -lrobsys_datasets
 

@@ -1,0 +1,5 @@
+Library_path:  "../lib/"
+
+
+TF_srv_name: "metal-tf-srv"
+TF_srv_cfg:  "../config/transform_server/transform_metal.yaml"
