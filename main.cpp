@@ -44,8 +44,8 @@ int main(int argc,char* argv[])
     std::string    ipc_cfg;
 
 #ifdef BUILD_BY_CONAN
-    module_cfg = "../config/robot_metal_mapping_nodes/config/rsnode_mapping_modules.yaml";
-    ipc_cfg    = "../config/robot_metal_mapping_nodes/config/rsnode_mapping_ipc.yaml";
+    module_cfg = "../config/robot_metal_mapping_nodes/rsnode_mapping_modules.yaml";
+    ipc_cfg    = "../config/robot_metal_mapping_nodes/rsnode_mapping_ipc.yaml";
 #else
     module_cfg = "/home/liyanx/workspace_robsys/robsys_robots/robot_metal_mapping_nodes/config/rsnode_mapping_modules.yaml";
        ipc_cfg = "/home/liyanx/workspace_robsys/robsys_robots/robot_metal_mapping_nodes/config/rsnode_mapping_ipc.yaml";
