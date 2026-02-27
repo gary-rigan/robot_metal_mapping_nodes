@@ -1,4 +1,4 @@
-config_name: "rsnode_slam"
+config_name: "rsnode_mapping"
 
 Topics:
     topic_laser: "Laserscan2d"

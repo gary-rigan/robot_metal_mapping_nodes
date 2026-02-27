@@ -25,7 +25,7 @@ int main(int argc,char* argv[])
 #ifdef BUILD_BY_CONAN
     rob_sys::set_robsys_log_std   (true,INFO);
     rob_sys::set_robsys_log_syslog(false,INFO);
-    rob_sys::set_robsys_log_file  (true,INFO,"/var/log/","rsnode_slam");
+    rob_sys::set_robsys_log_file  (true,INFO,"/var/log/","rsnode_mapping");
 #endif//BUILD_BY_CONAN
 
     rob_sys::cRobsysApplication robsys_app(argc,argv);

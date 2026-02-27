@@ -20,7 +20,7 @@ bool check_config_name(const YAML::Node& node) {
 
 
 int cIpcTrans::load_option_from_yaml(const std::string& filename,option_t& opt) {
-    SLOG(INFO)<<"Loading app ["<<k_rsnode_name <<"option from :" <<filename;
+    SLOG(INFO)<<"Loading app ["<<k_rsnode_name <<"] option from :" <<filename;
 
 
     RS_YAML_TRY
