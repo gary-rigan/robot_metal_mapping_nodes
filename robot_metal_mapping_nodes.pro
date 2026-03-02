@@ -59,7 +59,7 @@ include($${RSWS_BUIILD_ENV}/modules/RobsysFindProtobuf3.6.1.pri)
 
 INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/
 INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/utils
-INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/parsers
+INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/robsys_parsers
 INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/robsys_system
 INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/robsys_message
 
@@ -79,7 +79,7 @@ message("Target install path: " $${BIN_INSTALL_PATH})
 
 LIBS += -L$${LIB_ROBSYS_PATH}/ -lrobot_metal_ipc_msg -lrobot_metal_ipc_msg_bridge -ldevice_laserscan_livox_message
 LIBS += -L$${LIB_ROBSYS_PATH}/ -lrobsys_system -ltransform_server
-LIBS += -L$${LIB_ROBSYS_PATH}/ -lutils -lrobsys_message -lparsers -lrobsys_datasets
+LIBS += -L$${LIB_ROBSYS_PATH}/ -lutils -lrobsys_message -lrobsys_parsers -lrobsys_datasets
 
 LIBS += -L$${ROBSYS_PROTOBUF_LIBRARIES}
 

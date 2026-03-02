@@ -1,6 +1,6 @@
 #include "ipc_trans.h"
 #include "internal/rsnode_mapping_config.h"
-#include "parsers/parsers.h"
+#include "robsys_parsers/parsers.h"
 namespace rob_sys {
 namespace {
 bool check_config_name(const YAML::Node& node) {

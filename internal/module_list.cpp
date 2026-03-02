@@ -1,7 +1,7 @@
 #include "module_list.h"
 
 #include "file_system/file_system.h"
-#include "parsers/parsers.h"
+#include "robsys_parsers/parsers.h"
 namespace rob_sys {
 namespace  {
 
