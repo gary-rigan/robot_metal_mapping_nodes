@@ -2,6 +2,8 @@ Library_path:  "../lib/"
 
 Modules: [
 
+    [ module_lib: "librs_module_metal_datasets.so" ,
+      module_cfg: "../config/rs_module_metal_datasets/ds_metal_mapping.yaml" ],
     [ module_lib: "librs_module_chassis_kago5.so" ,
       module_cfg: "../config/rs_module_chassis_kago5/module_vehicle_kago5.yaml" ],
     [ module_lib: "librs_module_metal_mapping.so" ,

@@ -27,7 +27,7 @@ DISTFILES += \
 
 
 message("==============================Project example [$$TARGET]============================")
-DEFINES += "ROBSYS_LOG_TAG=App"
+DEFINES += "ROBSYS_LOG_TAG=rsnode-mapping"
 !equals(USE_CONAN, 1)  {
     BUILD_GCC_VER=8
     TARGET_ARCH=x86_64
