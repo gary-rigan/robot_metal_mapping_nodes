@@ -6,3 +6,4 @@ Topics:
     livox_imu:   "Sensor-imu3d"
     rgbd_front:  "rgbd-front"
     rgbd_rear:  "rgbd-front"
+    odometry2d:  "Odometry2d"

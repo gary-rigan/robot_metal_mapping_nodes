@@ -17,6 +17,7 @@ public:
         std::string _topic_livox_pts;
         std::string _topic_livox_imu;
         std::string _topic_rgbd_front;
+        std::string _topic_odometry2d;
     };
 public:
     cIpcTrans(const std::string&);
@@ -31,6 +32,7 @@ private:
     void tfunc_grab_laserscan();
     void tfunc_grab_livox_pts();
     void tfunc_grab_livox_imu();
+    void tfunc_grab_odometry2d();
 private:
     option_t _option;
 private: //sub
@@ -41,14 +43,17 @@ private:
     ipc::cStreamShareDataHandle<ipc_msg::cIpcMsgLasescan,ipc_msg::cIpcPropLaserscan>* _ipcsub_laserscan;
     ipc::cStreamShareDataHandle<ipc_msg::cIpcMsgLivoxCustom>*    _ipcsub_livox_pts;
     ipc::cStreamShareDataHandle<ipc_msg::cIpcMsgImu>*            _ipcsub_livox_imu;
+    ipc::cStreamShareDataHandle<ipc_msg::cIpcMsgOdometry>*       _ipcsub_odometry;
 private:
     datacenter::cDataCenterLocalPublisher<message::cMsgLaser,message::cPropLaser2D>* _pub_laser2d;
-    datacenter::cDataCenterLocalPublisher<livox::cCustomMsg>* _pub_livox_pts;
-    datacenter::cDataCenterLocalPublisher<message::cMsgIMU>*  _pub_livox_imu;
+    datacenter::cDataCenterLocalPublisher<livox::cCustomMsg>*     _pub_livox_pts;
+    datacenter::cDataCenterLocalPublisher<message::cMsgIMU>*      _pub_livox_imu;
+    datacenter::cDataCenterLocalPublisher<message::cMsgOdometry>* _pub_odometry;
 private:
     threads::cThreadPthread<std::function<void()>>* _th_laserscan;
     threads::cThreadPthread<std::function<void()>>* _th_livox_pts;
     threads::cThreadPthread<std::function<void()>>* _th_livox_imu;
+    threads::cThreadPthread<std::function<void()>>* _th_odometry2d;
 
 
 

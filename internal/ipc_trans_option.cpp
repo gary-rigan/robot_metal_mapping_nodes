@@ -35,6 +35,7 @@ int cIpcTrans::load_option_from_yaml(const std::string& filename,option_t& opt) 
         opt._topic_livox_pts  = ntopic["livox_pts"]  .as<std::string>();
         opt._topic_livox_imu  = ntopic["livox_imu"]  .as<std::string>();
         opt._topic_rgbd_front = ntopic["rgbd_front"] .as<std::string>();
+        opt._topic_odometry2d = ntopic["odometry2d"] .as<std::string>();
 
     }
     RS_YAML_CATCH("ipc-opt")
@@ -49,7 +50,8 @@ void cIpcTrans::show_option(const option_t& opt) {
        <<"\n>Laserscan2d: "<<opt._topic_laserscan
        <<"\n>Livox-pts:   "<<opt._topic_livox_pts
        <<"\n>Livox-imu:   "<<opt._topic_livox_imu
-       <<"\n>Rgbd-front:  "<<opt._topic_livox_imu;
+       <<"\n>Rgbd-front:  "<<opt._topic_rgbd_front
+       <<"\n>Odometry2d:  "<<opt._topic_odometry2d;
     SLOG(INFO)<<ss.str();
 
 }

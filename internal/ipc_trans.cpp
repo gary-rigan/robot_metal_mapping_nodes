@@ -8,11 +8,11 @@ cIpcTrans::cIpcTrans(const std::string& cfg)
       _stop_request(false),
       _ipcsub_laserscan(nullptr),
       _ipcsub_livox_pts(nullptr),
-      _ipcsub_livox_imu(nullptr),
+      _ipcsub_livox_imu(nullptr),_ipcsub_odometry(nullptr),
 
-      _pub_laser2d(nullptr),_pub_livox_pts(nullptr),_pub_livox_imu(nullptr),
+      _pub_laser2d(nullptr),_pub_livox_pts(nullptr),_pub_livox_imu(nullptr),_pub_odometry(nullptr),
 
-      _th_laserscan(nullptr),_th_livox_pts(nullptr),_th_livox_imu(nullptr)
+      _th_laserscan(nullptr),_th_livox_pts(nullptr),_th_livox_imu(nullptr),_th_odometry2d(nullptr)
 {
 
     if( load_option_from_yaml(cfg,_option) != ROBSYS_SUCCESSED) {
@@ -34,6 +34,10 @@ cIpcTrans::~cIpcTrans() {
         delete _ipcsub_livox_imu;
         _ipcsub_livox_imu = nullptr;
     }
+    if(_ipcsub_odometry) {
+        delete _ipcsub_odometry;
+        _ipcsub_odometry = nullptr;
+    }
     //local handle
     if(_pub_laser2d) {
         delete _pub_laser2d;
@@ -47,6 +51,10 @@ cIpcTrans::~cIpcTrans() {
         delete _pub_livox_imu;
         _pub_livox_imu = nullptr;
     }
+    if(_pub_odometry) {
+        delete _pub_odometry;
+        _pub_odometry = nullptr;
+    }
 }
 
 //_th_laserscan(nullptr),_th_livox_pts(nullptr),_th_livox_imu(nullptr)
@@ -57,6 +65,7 @@ int cIpcTrans::start() {
     _pub_laser2d   = create_publisher<message::cMsgLaser,message::cPropLaser2D>(_option._topic_laserscan);
     _pub_livox_pts = create_publisher<livox::cCustomMsg>                       (_option._topic_livox_pts);
     _pub_livox_imu = create_publisher<message::cMsgIMU>                        (_option._topic_livox_imu);
+    _pub_odometry  = create_publisher<message::cMsgOdometry>                   (_option._topic_odometry2d);
 
 
     _th_laserscan = new threads::cThreadPthread<std::function<void()>>(std::bind(&cIpcTrans::tfunc_grab_laserscan,this));
@@ -75,7 +84,14 @@ int cIpcTrans::start() {
     _th_livox_imu = new threads::cThreadPthread<std::function<void()>>(std::bind(&cIpcTrans::tfunc_grab_livox_imu,this));
     if(!_th_livox_imu) {
         _error = true;
-        LLOG(ERROR,"Create livox-pts grab thread failed");
+        LLOG(ERROR,"Create livox-imu grab thread failed");
+        return ROBSYS_ERROR;
+    }
+
+    _th_odometry2d = new threads::cThreadPthread<std::function<void()>>(std::bind(&cIpcTrans::tfunc_grab_odometry2d,this));
+    if(!_th_odometry2d) {
+        _error = true;
+        LLOG(ERROR,"Create odometry2d grab thread failed");
         return ROBSYS_ERROR;
     }
 
@@ -102,6 +118,13 @@ int cIpcTrans::start() {
     }
     _ipcsub_livox_imu->set_blocking(true);
 
+    _ipcsub_odometry = new ipc::cStreamShareDataHandle<ipc_msg::cIpcMsgOdometry>(_option._topic_odometry2d.c_str(),0);
+    if(_ipcsub_odometry  == nullptr) {
+        LLOG(ERROR,"Alloc ipc handle for [Odometry] results null");
+
+    }
+    _ipcsub_odometry ->set_blocking(true);
+
     while (true) {
         if(stop_request()) {
             LLOG(WARNING,"Stop requested!");
@@ -119,6 +142,7 @@ int cIpcTrans::start() {
     bool laserscan_opened = false;
     bool livox_imu_opened = false;
     bool livox_pts_opened = false;
+    bool odometry2d_oppened = false;
 
     while (true) {
         if(_stop_request) {
@@ -152,8 +176,18 @@ int cIpcTrans::start() {
             }
 
         }
+        if(!odometry2d_oppened) {
 
-        if(laserscan_opened && livox_imu_opened && livox_pts_opened) {
+            if(!_ipcsub_odometry->open(ipc::SSM_READ) ) {
+                LLOG(ERROR,"Open odometry2d ipc handle failed");
+            }
+            else {
+                odometry2d_oppened = true;
+
+            }
+        }
+
+        if(laserscan_opened && livox_imu_opened && livox_pts_opened && odometry2d_oppened) {
             LLOG(NOTICE,"All ipc puslisher opened");
             break;
         }
@@ -168,6 +202,9 @@ int cIpcTrans::start() {
     }
     if(_th_livox_imu->thread_start() != ROBSYS_SUCCESSED) {
         LLOG(ERROR,"Start livox-imu grab thread failed");
+    }
+    if(_th_odometry2d->thread_start() != ROBSYS_SUCCESSED) {
+        LLOG(ERROR,"Start odometry2d grab thread failed");
     }
 
     return ROBSYS_SUCCESSED;
@@ -190,6 +227,12 @@ int cIpcTrans::stop() {
         _th_livox_imu->thread_join();
         delete _th_livox_imu;
         _th_livox_imu = nullptr;
+    }
+    if(_th_odometry2d) {
+        SLOG(INFO)<<"Grab [odometry2d] thread joined ...";
+        _th_odometry2d->thread_join();
+        delete _th_odometry2d;
+        _th_odometry2d = nullptr;
     }
     if(_th_livox_pts) {
 
@@ -236,6 +279,10 @@ int cIpcTrans::stop() {
     if(_pub_livox_imu) {
         delete _pub_livox_imu;
         _pub_livox_imu = nullptr;
+    }
+    if(_pub_odometry) {
+        delete _pub_odometry;
+        _pub_odometry = nullptr;
     }
 
     if(_pub_laser2d) {
@@ -382,4 +429,35 @@ void cIpcTrans::tfunc_grab_livox_imu() {
     SLOG(INFO)<<"Livox-imu grab thread stopped";
 }
 
+void cIpcTrans::tfunc_grab_odometry2d() {
+    if(_ipcsub_odometry == nullptr) {
+        LLOG(ERROR,"Start [odometry2d] grab thread failed,ipc handle is null");
+        _error = true;
+        return ;
+    }
+    message::cMsgOdometry::shared_ptr_t msg(new message::cMsgOdometry);
+    SLOG(INFO)<<"Odometry2d grab thread started";
+
+    while (true) {
+        if(_stop_request) {
+            LLOG(WARNING,"Stop requested");
+            break;
+        }
+        bool ret = _ipcsub_odometry->read_new();
+        if(!ret) {
+            LLOG(ERROR,"Get [livox-imu] msg from ipc,Failed");
+            continue;
+        }
+        if(!msg) {
+            msg.reset(new message::cMsgOdometry);
+        }
+        if(ipc_msg::to_robsys_msg(_ipcsub_odometry->data,*msg) != ROBSYS_SUCCESSED) {
+            LLOG(ERROR,"Convert [livox-imu] msg to robsys failed");
+            continue;
+        }
+        _pub_odometry->swap_publish(msg);
+    }
+    SLOG(INFO)<<"Odometry2dgrab thread stopped";
+
+}
 }//namespace rob_sys
