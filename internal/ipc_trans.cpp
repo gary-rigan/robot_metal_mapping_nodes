@@ -145,7 +145,7 @@ int cIpcTrans::start() {
     bool odometry2d_oppened = false;
 
     while (true) {
-        if(_stop_request) {
+        if(stop_request()) {
             LLOG(WARNING,"Stop requested");
             break;
         }
@@ -192,6 +192,10 @@ int cIpcTrans::start() {
             break;
         }
         times::sleep_sys_t::rs_sleep(0.5);
+    }
+    if(stop_request()) {
+        LLOG(WARNING,"Stop requested,ipc-trans initialize skipped");
+        return ROBSYS_FAILURE;
     }
 
     if(_th_laserscan->thread_start() != ROBSYS_SUCCESSED) {
