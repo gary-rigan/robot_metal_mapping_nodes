@@ -365,6 +365,8 @@ void cIpcTrans::tfunc_grab_laserscan() {
             LLOG(ERROR,"Convert ipc-laserscan msg to robsys failed");
             continue;
         }
+
+        msg->name() = "laserscan2d";
         _pub_laser2d->swap_publish(msg);
     }
     SLOG(INFO)<<"Laserscan grab thread stopped";
@@ -459,6 +461,7 @@ void cIpcTrans::tfunc_grab_odometry2d() {
             LLOG(ERROR,"Convert [livox-imu] msg to robsys failed");
             continue;
         }
+        msg->name() = "odom";
         _pub_odometry->swap_publish(msg);
     }
     SLOG(INFO)<<"Odometry2dgrab thread stopped";
