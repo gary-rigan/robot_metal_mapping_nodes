@@ -386,7 +386,7 @@ void cIpcTrans::tfunc_grab_livox_pts() {
             LLOG(WARNING,"Stop requested");
             break;
         }
-        bool ret = _ipcsub_livox_pts->read_new();
+        bool ret = _ipcsub_livox_pts->read_next();
         if(!ret) {
             LLOG(ERROR,"Get [livox-pts] msg from ipc,Failed");
             continue;
@@ -400,7 +400,6 @@ void cIpcTrans::tfunc_grab_livox_pts() {
         }
         _pub_livox_pts->swap_publish(msg);
     }
-
     SLOG(INFO)<<"Livox-pts grab thread stopped";
 }
 void cIpcTrans::tfunc_grab_livox_imu() {
@@ -418,7 +417,7 @@ void cIpcTrans::tfunc_grab_livox_imu() {
             LLOG(WARNING,"Stop requested");
             break;
         }
-        bool ret = _ipcsub_livox_imu->read_new();
+        bool ret = _ipcsub_livox_imu->read_next();
         if(!ret) {
             LLOG(ERROR,"Get [livox-imu] msg from ipc,Failed");
             continue;
@@ -449,7 +448,7 @@ void cIpcTrans::tfunc_grab_odometry2d() {
             LLOG(WARNING,"Stop requested");
             break;
         }
-        bool ret = _ipcsub_odometry->read_new();
+        bool ret = _ipcsub_odometry->read_next();
         if(!ret) {
             LLOG(ERROR,"Get [livox-imu] msg from ipc,Failed");
             continue;
