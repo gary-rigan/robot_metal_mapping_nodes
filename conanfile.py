@@ -1,5 +1,6 @@
 from conans import ConanFile
 from conans.tools import load
+import subprocess
 import re
 import os
 
@@ -11,7 +12,7 @@ class robot_metal_mapping_nodes(ConanFile):
     name = "robot_metal_mapping_nodes"
     license = "None"
     author = "GEL"
-    url = "www.robsys.com"
+    url = "robsys.cn"
     description = "robsys robot_metal_mapping_nodes"
     topics = ("basic", "data")
     settings = "os", "compiler", "build_type", "arch"
@@ -65,6 +66,10 @@ class robot_metal_mapping_nodes(ConanFile):
         config_args += ["DEFINES+=ROBSYS_VERSION="+str(self.version)]
         config_args += ["BUILD_GCC_VER=" +str(self.settings.compiler.version)]
         config_args += ["TARGET_ARCH=" +str(self.settings.arch)]
+
+        commit_count = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).strip()
+        config_args += ["DEFINES+=GIT_COMMIT_ID=" +str(commit_count)]
+
         config_args += ["CONAN_BUILD=1"]
 
 

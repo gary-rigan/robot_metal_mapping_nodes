@@ -7,6 +7,7 @@
 #include "internal/stop_request.h"
 #include "internal/robot_modules.h"
 #include "internal/ipc_trans.h"
+#include "internal/app_version.h"
 namespace  {
 
 
@@ -18,10 +19,29 @@ void segmentation_fault(const char*) {
     LLOG(NOTICE,"Signal catched [SIGSEGV],in segmentation fault handle.try to stop main thread ");
     rob_sys::stop_request()=true;
 }
+void show_version(int /*argc*/,char* argv[]) {
+
+
+    std::cout<<"\nApp ["<<argv[0]<<"]"
+                <<"\n>\tName     :"<<rob_sys::app::name()
+                <<"\n>\tVersion  :"<<rob_sys::app::version()
+                <<"\n>\tInfo     :"<<rob_sys::app::info()
+                <<"\n>\tCommit-id:"<<rob_sys::app::commit_id()
+                <<"\n"<<rob_sys::app::build_info()<<std::endl;
+}
+
 }//namespace
 
 int main(int argc,char* argv[])
 {
+    if(argc == 2) {
+        if(std::string(argv[1]) == "-v"
+        || std::string(argv[1]) == "--version") {
+            show_version(argc,argv);
+            exit(1);
+        }
+    }
+
 #ifdef BUILD_BY_CONAN
     rob_sys::set_robsys_log_std   (true,INFO);
     rob_sys::set_robsys_log_syslog(false,INFO);

@@ -4,6 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        internal/app_version.cpp \
         internal/ipc_trans.cpp \
         internal/ipc_trans_option.cpp \
         internal/module_list.cpp \
@@ -13,6 +14,7 @@ SOURCES += \
 
 
 HEADERS += \
+    internal/app_version.h \
     internal/ipc_trans.h \
     internal/module_list.h \
     internal/robot_modules.h \
@@ -56,6 +58,16 @@ include($${RSWS_BUIILD_ENV}/qmake/robsys_rpath.pri)
 include($${RSWS_BUIILD_ENV}/modules/RobsysFindEigen.pri)
 #include($${RSWS_BUIILD_ENV}/modules/RobsysFindOpencv3.pri)
 include($${RSWS_BUIILD_ENV}/modules/RobsysFindProtobuf3.6.1.pri)
+
+
+exists (.git) {
+    COMMIT_ID = $$system(git rev-parse --short HEAD)
+    DEFINES+=GIT_COMMIT_ID="$${COMMIT_ID}"
+}
+else{
+    DEFINES+=GIT_COMMIT_ID=Git-unknow
+}
+
 
 INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/
 INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/utils
