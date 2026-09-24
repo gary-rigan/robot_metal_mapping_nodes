@@ -27,6 +27,7 @@ class robot_metal_mapping_nodes(ConanFile):
     }
     revision_mode = "scm"
     requires = (
+        ("robsys_ipc/[>=0.0.1]@navi/develop"),
         ("robsys_datasets/[>=0.0.1]@navi/develop"),
         ("robsys_system/[>=0.0.1]@navi/develop"),
         ("robot_metal_ipc_msg_bridge/[>=0.0.1]@navi/develop"),

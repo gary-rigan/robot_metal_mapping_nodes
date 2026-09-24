@@ -21,7 +21,7 @@ public:
     };
 public:
     cIpcTrans(const std::string&);
-    ~cIpcTrans();
+    ~cIpcTrans() override;
 public:
     int start();
     int stop();

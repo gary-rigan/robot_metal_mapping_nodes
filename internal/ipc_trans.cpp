@@ -16,7 +16,7 @@ cIpcTrans::cIpcTrans(const std::string& cfg)
 {
 
     if( load_option_from_yaml(cfg,_option) != ROBSYS_SUCCESSED) {
-        LLOG(FATAL,"Load option from yaml failed");
+        robsys_runtime_error("Load option from yaml failed");
     }
     show_option(_option);
 }

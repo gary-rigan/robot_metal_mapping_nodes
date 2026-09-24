@@ -14,11 +14,11 @@ SOURCES += \
 
 
 HEADERS += \
+    internal/app_config.h \
     internal/app_version.h \
     internal/ipc_trans.h \
     internal/module_list.h \
     internal/robot_modules.h \
-    internal/rsnode_mapping_config.h \
     internal/stop_request.h
 
 DISTFILES += \
@@ -74,6 +74,7 @@ INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/utils
 INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/robsys_parsers
 INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/robsys_system
 INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/robsys_message
+INCLUDEPATH += $${ROBSYS_ENV_PATH}/include/robsys_ipc
 
 INCLUDEPATH += $${ROBSYS_EIGEN3_INCLUDE}
 
@@ -91,7 +92,7 @@ message("Target install path: " $${BIN_INSTALL_PATH})
 
 LIBS += -L$${LIB_ROBSYS_PATH}/ -lrobot_metal_ipc_msg -lrobot_metal_ipc_msg_bridge -ldevice_laserscan_livox_message
 LIBS += -L$${LIB_ROBSYS_PATH}/ -lrobsys_system -ltransform_server
-LIBS += -L$${LIB_ROBSYS_PATH}/ -lutils -lrobsys_message -lrobsys_parsers -lrobsys_datasets
+LIBS += -L$${LIB_ROBSYS_PATH}/ -lutils -lrobsys_message -lrobsys_parsers -lrobsys_datasets -lrobsys_ipc
 
 LIBS += -L$${ROBSYS_PROTOBUF_LIBRARIES}
 
