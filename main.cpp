@@ -78,12 +78,12 @@ int main(int argc,char* argv[])
         robsys_exit(1);
     }
 
-    rob_sys::cRobotMetalModules device_modues(module_cfg);
-    if(device_modues.init()!=ROBSYS_SUCCESSED) {
+    rob_sys::cRobotModules robot_modues(module_cfg);
+    if(robot_modues.init()!=ROBSYS_SUCCESSED) {
         LLOG(ERROR,"Init kago5 device-modules failed");
         robsys_exit(-1);
     }
-    if(device_modues.start() != ROBSYS_SUCCESSED) {
+    if(robot_modues.start() != ROBSYS_SUCCESSED) {
         LLOG(ERROR,"Start kago5 device-modules failed");
         robsys_exit(-1);
     }
@@ -97,9 +97,12 @@ int main(int argc,char* argv[])
     if(ipc_trans.stop() != ROBSYS_SUCCESSED) {
         LLOG(ERROR,"Stop ipc trans failed");
     }
-    if(device_modues.stop() != ROBSYS_SUCCESSED) {
+    if(robot_modues.quick_exit()) {
+        robsys_exit(robsys_process_exit_normal);
+    }
+    if(robot_modues.stop() != ROBSYS_SUCCESSED) {
         LLOG(ERROR,"Stop modules failed");
     }
-    robsys_exit(1);
-    return 0;
+    robsys_exit(robsys_process_exit_normal);
+    return robsys_process_exit_normal;
 }

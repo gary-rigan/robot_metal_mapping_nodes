@@ -1,4 +1,8 @@
+config_name: "rsnode_mapping"
 Library_path:  "../lib/"
+
+
+Quick_exit: True
 
 Modules: [
 

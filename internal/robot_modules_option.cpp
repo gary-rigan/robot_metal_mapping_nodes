@@ -1,11 +1,14 @@
-#include "module_list.h"
+#include "robot_modules.h"
 
 #include "file_system/file_system.h"
-#include "robsys_parsers/parsers.h"
+#include "robsys_parsers/robsys_parsers.h"
+
+
+
 namespace rob_sys {
 namespace  {
 
-bool check_module_path(module_t* module) {
+bool check_module_path(cRobotModules::module_t* module) {
 
 
     if(!File::access_file(module->module_lib.c_str())) {
@@ -21,17 +24,8 @@ bool check_module_path(module_t* module) {
     return true;
 }
 }//namespace
-module_t::~module_t() {
-    if(module_impl) {
-        module->release(module_impl);
-    }
-    if(module) {
-        delete module;
-    }
-}
 
-
-int show_list(const std::deque<module_t*>& modules) {
+int cRobotModules::show_list(const std::deque<module_t*>& modules) {
     std::stringstream ss;
     ss<<"\nModules:";
     for(size_t i=0;i<modules.size();++i) {
@@ -42,7 +36,7 @@ int show_list(const std::deque<module_t*>& modules) {
     SLOG(INFO)<<ss.str();
     return ROBSYS_SUCCESSED;
 }
-int load_common_list_from_yaml(const std::string& yaml,std::deque<module_t*>& mods,std::string& tf_srv_cfg) {
+int cRobotModules::load_common_list_from_yaml(const std::string& yaml,std::deque<module_t*>& mods,std::string& tf_srv_cfg) {
 
     YAML::Node node = YAML::LoadFile(yaml);
     if(node.IsNull()) {
@@ -81,6 +75,10 @@ int load_common_list_from_yaml(const std::string& yaml,std::deque<module_t*>& mo
     else {
         tf_srv_cfg =std::string();
         tf_srv_cfg.clear();
+    }
+    _quick_exit = false;
+    if(node["Quick_exit"].IsDefined()) {
+        _quick_exit = node["Quick_exit"].as<bool>();
     }
     return failed?ROBSYS_ERROR:ROBSYS_SUCCESSED;
 }

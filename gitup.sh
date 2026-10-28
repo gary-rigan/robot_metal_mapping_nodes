@@ -1,5 +1,9 @@
 #!/bin/sh
 
+echo "============ git info v0.0.2============="
+echo "Commit num:"
+git rev-list --count HEAD
+
 time=`date "+%Y-%m-%d_%H:%M:%S"`
 
 git status

@@ -3,15 +3,15 @@
 #include "LLog/llogs.h"
 namespace rob_sys {
 
-cRobotMetalModules::cRobotMetalModules(const std::string& cfg)
+cRobotModules::cRobotModules(const std::string& cfg)
     : _module_cfgs(cfg),
-      _tf_srv(nullptr)
+      _tf_srv(nullptr),_quick_exit(false)
 {
 }
-cRobotMetalModules::~cRobotMetalModules() {
+cRobotModules::~cRobotModules() {
     cTransformServer::release(_tf_srv);
 }
-int cRobotMetalModules::init_module() {
+int cRobotModules::init_module() {
 
     std::stringstream ss;
     ss<<"\nModule: ";
@@ -34,7 +34,7 @@ int cRobotMetalModules::init_module() {
     SLOG(INFO)<<ss.str()<<"\nLoaded";
     return ROBSYS_SUCCESSED;
 }
-int cRobotMetalModules::init_service() {
+int cRobotModules::init_service() {
 
     if(!File::access_file(_tf_srv_cfg.c_str())) {
         LLOG(ERROR,"Init srv failed,cfg file [%s] does not exist",_tf_srv_cfg.c_str());
@@ -52,7 +52,7 @@ int cRobotMetalModules::init_service() {
     }
     return ROBSYS_SUCCESSED;
 }
-int cRobotMetalModules::init() {
+int cRobotModules::init() {
     if(load_common_list_from_yaml(_module_cfgs,_modules,_tf_srv_cfg)!= ROBSYS_SUCCESSED) {
         LLOG(FATAL,"Load list from yaml failed");
     }
@@ -69,7 +69,7 @@ int cRobotMetalModules::init() {
     }
     return ROBSYS_SUCCESSED;
 }
-int cRobotMetalModules::start() {
+int cRobotModules::start() {
 
     for(size_t i=0;i<_modules.size();++i) {
         SLOG(INFO)<<"Initializing module : ";
@@ -85,7 +85,7 @@ int cRobotMetalModules::start() {
     }
     return ROBSYS_SUCCESSED;
 }
-int cRobotMetalModules::stop() {
+int cRobotModules::stop() {
     for(size_t i=0;i<_modules.size();++i) {
         SLOG(INFO)<<"Stoppin module.. ";
         auto* module = _modules[i];
@@ -98,5 +98,8 @@ int cRobotMetalModules::stop() {
 
     }
     return ROBSYS_SUCCESSED;
+}
+bool cRobotModules::quick_exit() {
+    return _quick_exit;
 }
 }//namespace rob_sys

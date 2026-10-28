@@ -7,8 +7,8 @@ SOURCES += \
         internal/app_version.cpp \
         internal/ipc_trans.cpp \
         internal/ipc_trans_option.cpp \
-        internal/module_list.cpp \
         internal/robot_modules.cpp \
+        internal/robot_modules_option.cpp \
         internal/stop_request.cpp \
         main.cpp
 
@@ -17,7 +17,6 @@ HEADERS += \
     internal/app_config.h \
     internal/app_version.h \
     internal/ipc_trans.h \
-    internal/module_list.h \
     internal/robot_modules.h \
     internal/stop_request.h
 
